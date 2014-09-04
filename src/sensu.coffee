@@ -59,9 +59,9 @@ module.exports = (robot) ->
         if res.statusCode is 200
           result = JSON.parse(body)
           message = "Sensu version: #{result['sensu']['version']}"
-          message = message + '\nRabbitMQ: ' + result['rabbitmq']['connected'] + ', redis: ' + result['redis']['connected']
-          message = message + '\nRabbitMQ keepalives (messages/consumers): (' + result['rabbitmq']['keepalives']['messages'] + '/' + result['rabbitmq']['keepalives']['consumers'] + ')'
-          message = message + '\nRabbitMQ results (messages/consumers):' + result['rabbitmq']['results']['messages'] + '/' + result['rabbitmq']['results']['consumers'] + ')'
+          message = message + '\nRabbitMQ: ' + result['transport']['connected'] + ', redis: ' + result['redis']['connected']
+          message = message + '\nRabbitMQ keepalives (messages/consumers): (' + result['transport']['keepalives']['messages'] + '/' + result['transport']['keepalives']['consumers'] + ')'
+          message = message + '\nRabbitMQ results (messages/consumers):' + result['transport']['results']['messages'] + '/' + result['transport']['results']['consumers'] + ')'
           msg.send message
         else
           msg.send "An error occurred retrieving sensu info (#{res.statusCode}: #{body})"
@@ -295,7 +295,8 @@ module.exports = (robot) ->
           msg.send "API returned an error resolving #{msg.match[1]}/#{msg.match[2]} (#{res.statusCode}: #{res.body})"
 
 addClientDomain = (client) ->
-  domainMatch = new RegExp("\.#{process.env.HUBOT_SENSU_DOMAIN}$", 'i')
-  unless domainMatch.test(client)
-    client = client + '.' + process.env.HUBOT_SENSU_DOMAIN
+  if process.env.HUBOT_SENSU_DOMAIN != undefined
+    domainMatch = new RegExp("\.#{process.env.HUBOT_SENSU_DOMAIN}$", 'i')
+    unless domainMatch.test(client)
+      client = client + '.' + process.env.HUBOT_SENSU_DOMAIN
   client
