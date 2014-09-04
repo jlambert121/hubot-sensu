@@ -59,9 +59,9 @@ module.exports = (robot) ->
         if res.statusCode is 200
           result = JSON.parse(body)
           message = "Sensu version: #{result['sensu']['version']}"
-          message = message + '\nRabbitMQ: ' + result['rabbitmq']['connected'] + ', redis: ' + result['redis']['connected']
-          message = message + '\nRabbitMQ keepalives (messages/consumers): (' + result['rabbitmq']['keepalives']['messages'] + '/' + result['rabbitmq']['keepalives']['consumers'] + ')'
-          message = message + '\nRabbitMQ results (messages/consumers):' + result['rabbitmq']['results']['messages'] + '/' + result['rabbitmq']['results']['consumers'] + ')'
+          message = message + '\nRabbitMQ: ' + result['transport']['connected'] + ', redis: ' + result['redis']['connected']
+          message = message + '\nRabbitMQ keepalives (messages/consumers): (' + result['transport']['keepalives']['messages'] + '/' + result['transport']['keepalives']['consumers'] + ')'
+          message = message + '\nRabbitMQ results (messages/consumers):' + result['transport']['results']['messages'] + '/' + result['transport']['results']['consumers'] + ')'
           msg.send message
         else
           msg.send "An error occurred retrieving sensu info (#{res.statusCode}: #{body})"
