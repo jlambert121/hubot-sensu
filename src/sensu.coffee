@@ -262,11 +262,11 @@ module.exports = (robot) ->
         results = JSON.parse(body)
         output = []
         for result,value of results
-          if value['flapping']
+          if value['check']['flapping']
             flapping = ', flapping'
           else
             flapping = ''
-          output.push value['client'] + ' (' + value['check'] + flapping + ') - ' + value['output']
+          output.push value['client']['name'] + ' (' + value['check']['name'] + flapping + ') - `' + value['check']['output'].replace(/\n$/, '') + '`'
         if output.length is 0
           message = 'No events'
           if client != ''
